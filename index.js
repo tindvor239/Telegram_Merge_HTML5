@@ -7,11 +7,31 @@ const bot = new TelegramBot(TOKEN, {
     polling: true
 });
 const port = process.env.PORT || 5000;
-const gameName = "Telegram_Merge_HTML5";
+const gameName = "CatMerge";
 const queries = {};
-server.use(express.static(path.join(__dirname, 'Telegram_Merge_HTML5')));
+server.use(express.static(path.join(__dirname, 'CatMergerBuilder')));
 bot.onText(/help/, (msg) => bot.sendMessage(msg.from.id, "Say /game if you want to play."));
-bot.onText(/start|game/, (msg) => bot.sendGame(msg.from.id, gameName));
+// bot.onText(/start|game/, (msg) => bot.sendGame(msg.from.id, gameName));
+bot.onText(/start|game/, (msg) => { 
+    console.log("[msg]: ", msg); 
+    console.log("[gameName]: ", gameName); 
+    try { 
+        let gameurl = "https://tindvor239.github.io/Telegram_Merge_HTML5/"; 
+        // bot.sendGame(msg.from.id, gameName) 
+        bot.sendMessage(msg.from.id, "ok game!", { 
+            reply_markup: { 
+                inline_keyboard: [[{ 
+                    text: "AHIHI", 
+                    web_app: { 
+                        url: gameurl 
+                    } 
+                }]] 
+            } 
+        }) 
+    } catch (err) { 
+        console.log("[ERR]: ", err); 
+    } 
+});
 bot.on("callback_query", function (query) {
     if (query.game_short_name !== gameName) {
         bot.answerCallbackQuery(query.id, "Sorry, '" + query.game_short_name + "' is not available.");
